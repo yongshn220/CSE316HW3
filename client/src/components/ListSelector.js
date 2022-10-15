@@ -13,11 +13,13 @@ const ListSelector = () => {
     store.history = useHistory();
 
     useEffect(() => {
+        console.log("test");
         store.loadIdNamePairs();
-    }, []);
+    }, [store.deleteListCounter]);
 
+    
     function handleCreateNewList() {
-        store.createNew();
+        store.createNewPlaylist();
     }
     let listCard = "";
     if (store) {
@@ -29,6 +31,9 @@ const ListSelector = () => {
             />
         ))
     }
+
+    console.log("listselecte");
+    console.log(listCard);
     return (
         <div id="playlist-selector">
             <div id="list-selector-list">

@@ -51,7 +51,8 @@ function ListCard(props) {
     }
     function handleDeleteList(event) {
         event.stopPropagation();
-        store.showDeleteListModal();
+        console.log(event.target.id);
+        store.showDeleteListModal(event.target.id.substring("delete-list-".length));
     }
 
     let selectClass = "unselected-list-card";

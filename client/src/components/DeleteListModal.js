@@ -8,38 +8,38 @@ function DeleteListModal() {
         store.hideDeleteListModal();
     }
 
-    function handleClickConfirm() {
-        console.log("confirm");
-        // let id = event.target.id.substring("delete-list-".length);
-        // store.deletePlaylistById(id);
+    function handleClickConfirm(event) {
+        store.deletePlaylistById(document.getElementById("delete-list-modal").getAttribute("value"));
+        store.hideDeleteListModal();
     }
     return (
         <div 
             className="modal" 
             id="delete-list-modal" 
-            data-animation="slideInOutLeft">
-                <div className="modal-dialog" id='verify-delete-list-root'>
-                    <div className="modal-header">
-                        Delete playlist?
-                    </div>
-                    <div className="modal-center">
-                        <div className="modal-center-content">
-                            Are you sure you wish to permanently delete the {} playlist?
-                        </div>
-                    </div>
-                    <div id="confirm-cancel-container" className="modal-footer">
-                        <input type="button" 
-                            id="delete-list-confirm-button" 
-                            className="modal-button" 
-                            onClick={handleClickConfirm}
-                            value='Confirm' />
-                        <input type="button" 
-                            id="delete-list-cancel-button" 
-                            className="modal-button" 
-                            onClick={handleClickCancel}
-                            value='Cancel' />
+            data-animation="slideInOutLeft"
+            value="">
+            <div className="modal-dialog" id='verify-delete-list-root'>
+                <div className="modal-header">
+                    Delete playlist?
+                </div>
+                <div className="modal-center">
+                    <div className="modal-center-content">
+                        Are you sure you wish to permanently delete the {} playlist?
                     </div>
                 </div>
+                <div id="confirm-cancel-container" className="modal-footer">
+                    <input type="button" 
+                        id="delete-list-confirm-button" 
+                        className="modal-button" 
+                        onClick={handleClickConfirm}
+                        value='Confirm' />
+                    <input type="button" 
+                        id="delete-list-cancel-button" 
+                        className="modal-button" 
+                        onClick={handleClickCancel}
+                        value='Cancel' />
+                </div>
+            </div>
         </div>
     );
 }
