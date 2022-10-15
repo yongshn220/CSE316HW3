@@ -6,9 +6,18 @@ const Playlist = require('../models/playlist-model')
     
     @author McKilla Gorilla
 */
+deletePlaylistById = (req, res) => {
+    Playlist.deleteOne({ _id: req.params.id }, (err, list) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err})
+        }
+
+        return res.status(200).json({ success: true, playlist: null})
+    }).catch(err => console.log(err))
+}
+
 createPlaylist = (req, res) => {
     const body = req.body;
-    console.log("createPlaylist body: " + body);
 
     if (!body) {
         return res.status(400).json({
@@ -16,13 +25,11 @@ createPlaylist = (req, res) => {
             error: 'You must provide a Playlist',
         })
     }
-
     const playlist = new Playlist(body);
-    console.log("playlist: " + JSON.stringify(body));
+    
     if (!playlist) {
         return res.status(400).json({ success: false, error: err })
     }
-
     playlist
         .save()
         .then(() => {
@@ -39,6 +46,7 @@ createPlaylist = (req, res) => {
             })
         })
 }
+
 getPlaylistById = async (req, res) => {
     await Playlist.findOne({ _id: req.params.id }, (err, list) => {
         if (err) {
@@ -89,6 +97,7 @@ getPlaylistPairs = async (req, res) => {
 
 module.exports = {
     createPlaylist,
+    deletePlaylistById,
     getPlaylists,
     getPlaylistPairs,
     getPlaylistById

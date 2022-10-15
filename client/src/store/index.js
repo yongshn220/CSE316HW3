@@ -18,6 +18,7 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
+    DELETE_LIST: "DELETE_LIST",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -102,6 +103,13 @@ export const useGlobalStore = () => {
                     listNameActive: true
                 });
             }
+
+            // case GlobalStoreActionType.DELETE_LIST: {
+            //     return setStore({
+            //         idNamePaires: store.idNamePairs,
+            //         currentList: 
+            //     })
+            // }
             default:
                 return store;
         }
@@ -202,6 +210,45 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
             payload: null
         });
+    }
+        
+    store.createNewPlaylist = function () {
+        async function asyncCreateNewPlayList() {
+            let newList = {"name": "Untitled", "songs": []};
+            let response = await api.createNewList(newList);
+            if (response.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.CREATE_NEW_LIST,
+                    payload: response.data.playlist,
+                });
+                store.history.push("/playlist/" + response.data.playlist._id);
+            }
+        }
+        asyncCreateNewPlayList();
+    }
+
+    store.deletePlaylistById = function (id) {
+        async function asyncRemovePlaylist() {
+            let response = await api.deletePlaylistById(id);
+            if (response.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+                    payload: null,
+                });
+                // store.history.push()
+            }
+        }
+        asyncRemovePlaylist(id);
+    }
+
+    store.showDeleteListModal = function () {
+        let modal = document.getElementById("delete-list-modal");
+        modal.classList.add("is-visible");
+    }
+
+    store.hideDeleteListModal = function () {
+        let modal = document.getElementById("delete-list-modal");
+        modal.classList.remove("is-visible");
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
