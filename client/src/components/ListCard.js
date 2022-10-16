@@ -13,6 +13,7 @@ function ListCard(props) {
     const [ editActive, setEditActive ] = useState(false);
     const [ text, setText ] = useState("");
     store.history = useHistory();
+
     const { idNamePair, selected } = props;
 
     function handleLoadList(event) {

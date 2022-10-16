@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import SongCard from './SongCard.js'
 import { GlobalStoreContext } from '../store'
@@ -12,6 +12,12 @@ function PlaylistCards() {
     const { store } = useContext(GlobalStoreContext);
     store.history = useHistory();
 
+    useEffect(() => {
+        store.updateCurrentList();
+    }, [store.createSongCounter]);
+
+    
+    console.log("ADDSONG");
     return (
         <div id="playlist-cards">
         {

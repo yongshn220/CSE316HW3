@@ -9,6 +9,7 @@ const PlaylistController = require('../controllers/playlist-controller')
 const router = express.Router()
 
 router.post('/playlist', PlaylistController.createPlaylist)
+router.post('/playlist/song/:id', PlaylistController.createSong)
 router.delete('/playlist/:id', PlaylistController.deletePlaylistById)
 router.get('/playlist/:id', PlaylistController.getPlaylistById)
 router.get('/playlists', PlaylistController.getPlaylists)

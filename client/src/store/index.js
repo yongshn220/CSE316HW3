@@ -19,6 +19,8 @@ export const GlobalStoreActionType = {
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     DELETE_LIST: "DELETE_LIST",
+    CREATE_NEW_SONG: "CREATE_NEW_SONG",
+    DELETE_SONG: "DELETE_SONG",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -33,6 +35,7 @@ export const useGlobalStore = () => {
         currentList: null,
         newListCounter: 0,
         deleteListCounter: 0,
+        createSongCounter: 0,
         listNameActive: false
     });
 
@@ -124,6 +127,17 @@ export const useGlobalStore = () => {
                     listNameActive: true
                 });
             }
+
+            case GlobalStoreActionType.CREATE_NEW_SONG: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    deleteListCounter: store.deleteListCounter,
+                    createSongCounter: store.createSongCounter + 1,
+                    listNameAction: false,
+                })
+            }
             default:
                 return store;
         }
@@ -192,6 +206,10 @@ export const useGlobalStore = () => {
         asyncLoadIdNamePairs();
     }
 
+    store.updateCurrentList = function () {
+        store.setCurrentList(store.currentList._id);
+    }
+
     store.setCurrentList = function (id) {
         async function asyncSetCurrentList(id) {
             let response = await api.getPlaylistById(id);
@@ -212,6 +230,20 @@ export const useGlobalStore = () => {
     store.getPlaylistSize = function() {
         return store.currentList.songs.length;
     }
+    store.createSong = function () {
+        async function asyncCreateSong() {
+            let response = await api.createSong(store.currentList._id);
+            if (response.data.success) {
+                storeReducer({
+                    type:GlobalStoreActionType.CREATE_NEW_SONG,
+                    payload: null
+                });
+                store.history.push();
+            }
+        }
+        asyncCreateSong();
+    }
+
     store.undo = function () {
         tps.undoTransaction();
     }
