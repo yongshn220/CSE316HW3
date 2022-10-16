@@ -21,6 +21,7 @@ export const GlobalStoreActionType = {
     DELETE_LIST: "DELETE_LIST",
     CREATE_NEW_SONG: "CREATE_NEW_SONG",
     DELETE_SONG: "DELETE_SONG",
+    MOVE_SONG: "MOVE_SONG",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -130,6 +131,16 @@ export const useGlobalStore = () => {
 
             case GlobalStoreActionType.CREATE_NEW_SONG: {
                 return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    deleteListCounter: store.deleteListCounter,
+                    createSongCounter: store.createSongCounter + 1,
+                    listNameAction: false,
+                })
+            }
+            case GlobalStoreActionType.MOVE_SONG: {
+                return setStore( {
                     idNamePairs: store.idNamePairs,
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
@@ -283,7 +294,6 @@ export const useGlobalStore = () => {
                     type: GlobalStoreActionType.DELETE_LIST,
                     payload: null,
                 });
-                store.history.push("")
             }
         }
         asyncRemovePlaylist(id);
@@ -304,6 +314,18 @@ export const useGlobalStore = () => {
         modal.classList.remove("is-visible");
     }
 
+    store.moveSong = function (start, end) {
+        async function asyncMoveSong() {
+            let response = await api.moveSong(store.currentList._id, start, end);
+            if (response.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.MOVE_SONG,
+                    payload: null,
+                });
+            }
+        }
+        asyncMoveSong(); 
+    }
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
 }

@@ -17,9 +17,7 @@ deletePlaylistById = (req, res) => {
 }
 
 createSong = async (req, res) => {
-    console.log("000000-------------")
     await Playlist.findOne({ _id: req.params.id }, (err, _playlist) => {
-        console.log("in");
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
@@ -40,7 +38,59 @@ createSong = async (req, res) => {
             })
         })
     }).catch(err => console.log(err))
+}
 
+moveSong = async (req, res) => {
+    await Playlist.findOne({_id: req.params.id}, (err, _playlist) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err})
+        }
+        moveSongInPlaylist(_playlist, parseInt(req.params.start), parseInt(req.params.end));
+        console.log(_playlist);
+        _playlist.save().then(() => {
+            return res.status(201).json({
+                success: true,
+                playlist: _playlist,
+                message: "",
+            })
+        })
+        .catch (error => {
+            return res.status(400).json({
+                error,
+                message: "",
+            })
+        })
+    }).catch(err => console.log(err))
+}
+
+moveSongInPlaylist = (list, start, end) => {
+    // WE NEED TO UPDATE THE STATE FOR THE APP
+    let temp;
+    if (start < end) {
+        temp = copySong(list.songs[start]);
+        for (let i = start; i < end; i++) {
+            copySongData(list.songs[i], list.songs[i+1]);
+        }
+    }
+    else if (start > end) {
+        temp = copySong(list.songs[start]);
+        for (let i = start; i > end; i--) {
+            copySongData(list.songs[i], list.songs[i-1]);
+        }
+    }
+    copySongData(list.songs[end], temp);
+    return list;
+}
+
+copySong = (song) => {
+    return {_id: song._id, title: song.title, artist: song.artist, youTubeId: song.youTubeId};
+}
+
+copySongData = (song1, song2) => {
+    song1._id = song2._id;
+    song1.title = song2.title;
+    song1.artist = song2.artist; 
+    song1.youTubeId = song2.youTubeId; 
 }
 
 createPlaylist = (req, res) => {
@@ -125,6 +175,7 @@ getPlaylistPairs = async (req, res) => {
 module.exports = {
     createPlaylist,
     createSong,
+    moveSong,
     deletePlaylistById,
     getPlaylists,
     getPlaylistPairs,
