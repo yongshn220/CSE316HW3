@@ -23,6 +23,7 @@ export const GlobalStoreActionType = {
     DELETE_SONG: "DELETE_SONG",
     MOVE_SONG: "MOVE_SONG",
     EDIT_SONG: "EDIT_SONG",
+    DELETE_SONG: "DELETE_SONG",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -161,6 +162,17 @@ export const useGlobalStore = () => {
                     listNameAction: false,
                 })
             }
+            case GlobalStoreActionType.DELETE_SONG: {
+                return setStore( {
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    deleteListCounter: store.deleteListCounter,
+                    createSongCounter: store.createSongCounter + 1,
+                    listNameAction: false,
+                })
+            }
+
             default:
                 return store;
         }
@@ -363,11 +375,38 @@ export const useGlobalStore = () => {
             if (response.data.success) {
                 storeReducer({
                     type: GlobalStoreActionType.EDIT_SONG,
-                    playload: null,
+                    payload: null,
                 });
             }
         }    
         asyncEditSong();    
+    }
+
+    store.showDeleteSongModal = function (id) {
+        let modal = document.getElementById("delete-song-modal");
+        modal.classList.add("is-visible");
+        modal.setAttribute("value", id);
+    }   
+
+    store.hideDeleteSongModal = function () {
+        let modal = document.getElementById("delete-song-modal");
+        modal.classList.remove("is-visible");
+    }
+
+    store.deleteSong = function () {
+        async function asyncDeleteSong() {
+            let sid = document.getElementById("delete-song-modal").getAttribute("value");
+            let response = await api.deleteSongById(store.currentList._id, sid)
+
+            if (response.data.success){
+                storeReducer({
+                    type: GlobalStoreActionType.DELETE_SONG,
+                    payload: null,
+                });
+            }
+        }
+        
+        asyncDeleteSong();
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT

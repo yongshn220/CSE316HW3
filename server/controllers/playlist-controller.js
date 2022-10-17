@@ -6,6 +6,26 @@ const Playlist = require('../models/playlist-model')
     
     @author McKilla Gorilla
 */
+
+
+deleteSongById = async (req, res) => {
+    await Playlist.findOne({_id: req.params.id}, (err, _playlist) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err})
+        }
+
+        _playlist.songs = _playlist.songs.filter(song => song._id != req.params.sid);
+
+        _playlist.save().then(() => {
+            return res.status(201).json({
+                success: true,
+                playlist:_playlist,
+                message:"",
+            })
+        })
+    }).catch(err => console.log(err))
+}
+
 deletePlaylistById = (req, res) => {
     Playlist.deleteOne({ _id: req.params.id }, (err, list) => {
         if (err) {
@@ -21,7 +41,7 @@ createSong = async (req, res) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
-        _playlist.songs.push({title: "Untitle", artist: "Unknown",youTubeId:""});
+        _playlist.songs.push({title: "Untitle", artist: "Unknown", youTubeId:""});
         console.log(_playlist);
 
         _playlist.save().then(() => {
@@ -106,13 +126,9 @@ editSong = async (req, res) => {
             console.log(song._id);
             if (s._id == song._id)
             {
-                console.log("-------------------");
-                console.log(song);
-                console.log("----")
                 s.title = song.title;
                 s.artist = song.artist;
                 s.youTubeId = song.youTubeId;
-                console.log(s);
             }
         })
 
@@ -216,6 +232,7 @@ module.exports = {
     moveSong,
     editSong,
     deletePlaylistById,
+    deleteSongById,
     getPlaylists,
     getPlaylistPairs,
     getPlaylistById
