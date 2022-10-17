@@ -18,6 +18,7 @@ function PlaylistCards() {
         store.updateCurrentList();
     }, [store.createSongCounter]);
 
+    console.log(store.currentList.songs);
     return (
         <div id="playlist-cards">
             {

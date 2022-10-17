@@ -158,11 +158,11 @@ export default class jsTPS {
      * counter. Note this function may be invoked as a result of either adding
      * a transaction (which also does it), or redoing a transaction.
      */
-    doTransaction() {
+    doTransaction(store) {
         if (this.hasTransactionToRedo()) {
             this.performingDo = true;
             let transaction = this.transactions[this.mostRecentTransaction+1];
-            transaction.doTransaction();
+            transaction.doTransaction(store);
             this.mostRecentTransaction++;
             this.performingDo = false;
         }
@@ -172,11 +172,11 @@ export default class jsTPS {
      * This function gets the most recently executed transaction on the 
      * TPS stack and undoes it, moving the TPS counter accordingly.
      */
-    undoTransaction() {
+    undoTransaction(store) {
         if (this.hasTransactionToUndo()) {
             this.performingUndo = true;
             let transaction = this.transactions[this.mostRecentTransaction];
-            transaction.undoTransaction();
+            transaction.undoTransaction(store);
             this.mostRecentTransaction--;
             this.performingUndo = false;
         }
