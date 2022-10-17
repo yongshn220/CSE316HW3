@@ -1,6 +1,7 @@
 import { useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import SongCard from './SongCard.js'
+import EditSongModal from './EditSongModal.js'
 import { GlobalStoreContext } from '../store'
 /*
     This React component lets us edit a loaded list, which only
@@ -15,21 +16,21 @@ function PlaylistCards() {
     useEffect(() => {
         store.updateCurrentList();
     }, [store.createSongCounter]);
-
     
-    console.log("ADDSONG");
     return (
         <div id="playlist-cards">
-        {
-            store.currentList.songs.map((song, index) => (
-                <SongCard
-                    id={'playlist-song-' + (index)}
-                    key={'playlist-song-' + (index)}
-                    index={index}
-                    song={song}
-                />
-            ))
-        }
+            {
+                store.currentList.songs.map((song, index) => (
+                    <SongCard
+                        id={'playlist-song-' + (index)}
+                        key={'playlist-song-' + (index)}
+                        index={index}
+                        song={song}
+                    />
+                ))
+            }
+            <EditSongModal>
+            </EditSongModal>
         </div>
     )
 }

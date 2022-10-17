@@ -41,7 +41,11 @@ function SongCard(props) {
     }
 
     function handleOnClick(event) {
-
+        console.log("EEE");
+        if (event.detail === 2) {
+            event.preventDefault();
+            store.showEditSong(song);
+        }
     }
 
     return (
@@ -73,5 +77,4 @@ function SongCard(props) {
         </div>
     );
 }
-
 export default SongCard;

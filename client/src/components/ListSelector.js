@@ -45,13 +45,13 @@ const ListSelector = () => {
                         className="playlister-button"
                         value="+" />
                     Your Lists
-                </div>                
+                </div>
                 {listCard}
             </div>
             <DeleteListModal>
             </DeleteListModal>
         </div>
-        )
+    )
 }
 
 export default ListSelector;

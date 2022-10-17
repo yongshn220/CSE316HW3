@@ -93,6 +93,44 @@ copySongData = (song1, song2) => {
     song1.youTubeId = song2.youTubeId; 
 }
 
+editSong = async (req, res) => {
+    let song = JSON.parse(req.params.song);
+    
+    await Playlist.findOne({_id: req.params.id}, (err, _playlist) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err})
+        }
+        console.log(_playlist.songs);
+        _playlist.songs.map((s) => {
+            console.log(s._id);
+            console.log(song._id);
+            if (s._id == song._id)
+            {
+                console.log("-------------------");
+                console.log(song);
+                console.log("----")
+                s.title = song.title;
+                s.artist = song.artist;
+                s.youTubeId = song.youTubeId;
+                console.log(s);
+            }
+        })
+
+        _playlist.save().then(() => {
+            return res.status(201).json({
+                success: true,
+                playlist: _playlist,
+                message: "",
+            })
+        })
+        .catch (error => {
+            return res.status(400).json({
+                error,
+                message: "",
+            })
+        })
+    }).catch(err => console.log(err))
+}
 createPlaylist = (req, res) => {
     const body = req.body;
 
@@ -176,6 +214,7 @@ module.exports = {
     createPlaylist,
     createSong,
     moveSong,
+    editSong,
     deletePlaylistById,
     getPlaylists,
     getPlaylistPairs,

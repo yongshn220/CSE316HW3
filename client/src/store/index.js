@@ -22,6 +22,7 @@ export const GlobalStoreActionType = {
     CREATE_NEW_SONG: "CREATE_NEW_SONG",
     DELETE_SONG: "DELETE_SONG",
     MOVE_SONG: "MOVE_SONG",
+    EDIT_SONG: "EDIT_SONG",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -124,6 +125,7 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: payload,
                     newListCounter: store.newListCounter,
+                    createSongCounter: store.createSongCounter,
                     deleteListCounter: store.deleteListCounter,
                     listNameActive: true
                 });
@@ -140,6 +142,16 @@ export const useGlobalStore = () => {
                 })
             }
             case GlobalStoreActionType.MOVE_SONG: {
+                return setStore( {
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    deleteListCounter: store.deleteListCounter,
+                    createSongCounter: store.createSongCounter + 1,
+                    listNameAction: false,
+                })
+            }
+            case GlobalStoreActionType.EDIT_SONG: {
                 return setStore( {
                     idNamePairs: store.idNamePairs,
                     currentList: store.currentList,
@@ -326,6 +338,38 @@ export const useGlobalStore = () => {
         }
         asyncMoveSong(); 
     }
+
+    store.showEditSong = function (song) {
+
+        document.getElementById("edit-input-title").value = song.title;
+        document.getElementById("edit-input-artist").value = song.artist;
+        document.getElementById("edit-input-youtubeId").value = song.youTubeId;
+        let modal = document.getElementById("edit-songinfo");
+        console.log(song);
+        modal.setAttribute("value", JSON.stringify(song));
+        modal.classList.add("is-visible");
+    }
+
+    store.hideEditSongModal = function () {
+        let modal = document.getElementById("edit-songinfo");
+        modal.classList.remove("is-visible");
+    }
+
+    store.editSong = function (song) {
+        async function asyncEditSong()
+        {  
+            console.log(song);
+            let response = await api.editSong(store.currentList._id, song)
+            if (response.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.EDIT_SONG,
+                    playload: null,
+                });
+            }
+        }    
+        asyncEditSong();    
+    }
+
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
 }
