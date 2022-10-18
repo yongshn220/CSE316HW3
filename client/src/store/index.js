@@ -459,8 +459,9 @@ export const useGlobalStore = () => {
         tps.addTransaction(transaction);
     }
     
-    store.moveSongTransaction = function () {
-
+    store.moveSongTransaction = function (start, end) {
+        let transaction = new MoveSong_Transaction(store, start, end);
+        tps.addTransaction(transaction);
     }
 
     store.EditSongTransaction = function () {
