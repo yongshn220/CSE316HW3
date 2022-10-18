@@ -6,7 +6,7 @@ function DeleteSongModal() {
 
     function handleOnClickConfirm(event)
     {
-        store.deleteSong();
+        store.deleteSongTransaction();
         store.hideDeleteSongModal();
     }
 

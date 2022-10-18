@@ -230,7 +230,6 @@ export const useGlobalStore = () => {
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
     store.loadIdNamePairs = function () {
         async function asyncLoadIdNamePairs() {
-            console.log("ac");
             const response = await api.getPlaylistPairs();
             if (response.data.success) {
                 let pairsArray = response.data.idNamePairs;
@@ -357,6 +356,19 @@ export const useGlobalStore = () => {
         asyncCreateSong();
     }
 
+    store.createSongInIndex = function (index, song) {
+        async function asyncCreateSongById() {
+            let response = await api.createSongInIndex(store.currentList._id, index, JSON.stringify(song));
+            if (response.data.success) {
+                storeReducer({
+                    type:GlobalStoreActionType.CREATE_NEW_SONG,
+                    payload: response.data.playlist
+                });
+            }
+        }
+        asyncCreateSongById(index, song);
+    }
+
     store.moveSong = function (start, end) {
         async function asyncMoveSong() {
             let response = await api.moveSong(store.currentList._id, start, end);
@@ -396,11 +408,9 @@ export const useGlobalStore = () => {
         asyncEditSong();    
     }
     
-    store.deleteSong = function () {
+    store.deleteSong = function (sid) {
         async function asyncDeleteSong() {
-            let sid = document.getElementById("delete-song-modal").getAttribute("value");
-            let response = await api.deleteSongById(store.currentList._id, sid)
-            
+            let response = await api.deleteSongById(store.currentList._id, sid);
             if (response.data.success){
                 storeReducer({
                     type: GlobalStoreActionType.DELETE_SONG,
@@ -408,7 +418,7 @@ export const useGlobalStore = () => {
                 });
             }
         }  
-        asyncDeleteSong();
+        asyncDeleteSong(sid);
     }
 
     store.deleteLastSong = function () {
@@ -416,16 +426,8 @@ export const useGlobalStore = () => {
         console.log(store.currentList.songs);
         let sid = store.currentList.songs[store.currentList.songs.length - 1]._id;
         document.getElementById("delete-song-modal").setAttribute("value", sid);
-        store.deleteSong();
+        store.deleteSong(sid);
     }
-
-    // store.updatePlaylistData = function () {
-    //     async function updateList(playlist) {
-    //         let response = await api.updateListDataById(store.currentList._id, )
-    //     }
-    //     updateList(playlist);
-    // }
-
     // ******* TRANSACTION MODIFICATION *************
     store.undo = function () {
         console.log(store.currentList.songs.length);
@@ -441,7 +443,20 @@ export const useGlobalStore = () => {
     }
     
     store.deleteSongTransaction = function () {
-        
+        let sid = document.getElementById("delete-song-modal").getAttribute("value");
+        let index;
+        let song;
+        for (let i = 0; i < store.currentList.songs.length; i++) {
+            if (store.currentList.songs[i]._id == sid)
+            {
+                index = i;
+                song = store.currentList.songs[i];
+                break;
+            }
+        }
+
+        let transaction = new DeleteSong_Transaction(store, index, song);
+        tps.addTransaction(transaction);
     }
     
     store.moveSongTransaction = function () {

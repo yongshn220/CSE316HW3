@@ -60,6 +60,31 @@ createSong = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+createSongInIndex = async (req, res) => {
+    console.log("creatSonginindex");
+    await Playlist.findOne({ _id: req.params.id }, (err, _playlist) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        console.log(req.params);
+        _playlist.songs.splice(req.params.index, 0, JSON.parse(req.params.song));
+
+        _playlist.save().then(() => {
+            return res.status(201).json({
+                success: true,
+                playlist: _playlist,
+                message: "",
+            })
+        })
+        .catch (error => {
+            return res.status(400).json({
+                error,
+                message: "",
+            })
+        })
+    }).catch(err => console.log(err))
+}
+
 moveSong = async (req, res) => {
     await Playlist.findOne({_id: req.params.id}, (err, _playlist) => {
         if (err) {
@@ -229,6 +254,7 @@ getPlaylistPairs = async (req, res) => {
 module.exports = {
     createPlaylist,
     createSong,
+    createSongInIndex,
     moveSong,
     editSong,
     deletePlaylistById,

@@ -13,7 +13,6 @@ const ListSelector = () => {
     store.history = useHistory();
 
     useEffect(() => {
-        console.log("test");
         store.loadIdNamePairs();
     }, [store.deleteListCounter]);
 

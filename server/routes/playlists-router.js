@@ -10,6 +10,7 @@ const router = express.Router()
 
 router.post('/playlist', PlaylistController.createPlaylist)
 router.post('/playlist/song/:id', PlaylistController.createSong)
+router.post('/playlist/songi/:id/:index/:song', PlaylistController.createSongInIndex)
 router.post('/playlist/move/:id/:start/:end', PlaylistController.moveSong)
 router.post('/playlist/song/edit/:id/:song', PlaylistController.editSong)
 router.delete('/playlist/:id', PlaylistController.deletePlaylistById)
