@@ -6,12 +6,12 @@ function EditSongModal() {
     const { store } = useContext(GlobalStoreContext);
     function handleOnClickConfirm(event) {
         let song = JSON.parse(document.getElementById("edit-songinfo").getAttribute("value"));
-
+        let oldSong = JSON.stringify(song);
         song.title = document.getElementById("edit-input-title").value;
         song.artist = document.getElementById("edit-input-artist").value;
         song.youTubeId = document.getElementById("edit-input-youtubeId").value;
 
-        store.editSong(JSON.stringify(song));
+        store.editSongTransaction(oldSong, JSON.stringify(song));
         store.hideEditSongModal();
     }
 

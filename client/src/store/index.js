@@ -395,8 +395,7 @@ export const useGlobalStore = () => {
     
     store.editSong = function (song) {
         async function asyncEditSong()
-        {  
-            console.log(song);
+        { 
             let response = await api.editSong(store.currentList._id, song)
             if (response.data.success) {
                 storeReducer({
@@ -464,8 +463,9 @@ export const useGlobalStore = () => {
         tps.addTransaction(transaction);
     }
 
-    store.EditSongTransaction = function () {
-
+    store.editSongTransaction = function (oldSong, newSong) {
+        let transaction = new EditSong_Transaction(store, oldSong, newSong);
+        tps.addTransaction(transaction);
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
