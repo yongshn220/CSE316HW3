@@ -22,7 +22,6 @@ function SongCard(props) {
     }
     function handleDrop(event){
         event.preventDefault();
-        console.log("drop")
         let target = event.target;
         let targetId = target.id;
         if (target.className !== "playlister-song-dragged-to")
@@ -32,13 +31,12 @@ function SongCard(props) {
         targetId = targetId.substring(target.id.indexOf("-") + 1);
         let sourceId = event.dataTransfer.getData("song");
         sourceId = sourceId.substring(sourceId.indexOf("-") + 1);
-        
+
         // ASK THE MODEL TO MOVE THE DATA
         store.moveSongTransaction(parseInt(sourceId), parseInt(targetId));
     }
 
     function handleOnClick(event) {
-        console.log("EEE");
         if (event.detail === 2) {
             event.preventDefault();
             store.showEditSong(song);
@@ -46,8 +44,7 @@ function SongCard(props) {
     }
     function handleOnDeleteClick(event) {
         event.preventDefault();
-        console.log("delete Song");
-        store.showDeleteSongModal(song._id);
+        store.showDeleteSongModal(song);
     }
     return (
         <div

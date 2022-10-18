@@ -14,9 +14,11 @@ const ListSelector = () => {
 
     useEffect(() => {
         store.loadIdNamePairs();
-    }, [store.deleteListCounter]);
+        console.log("cheeck");
+    }, [store.deleteListCounter, store.listNameActive]);
 
-    
+    console.log("list selection");
+
     function handleCreateNewList() {
         store.createNewPlaylist();
     }
@@ -31,8 +33,14 @@ const ListSelector = () => {
         ))
     }
 
-    console.log("listselecte");
-    console.log(listCard);
+    let addDisable = false;
+    console.log(store.tempListNameActive);
+    let className = "playlister-button";
+    if (store.tempListNameActive) { 
+        addDisable = true; 
+        className = "playlister-button-disabled";
+    }
+
     return (
         <div id="playlist-selector">
             <div id="list-selector-list">
@@ -40,9 +48,12 @@ const ListSelector = () => {
                     <input
                         type="button"
                         id="add-list-button"
+                        className={className}
+                        disabled={addDisable}
                         onClick={handleCreateNewList}
-                        className="playlister-button"
+                        
                         value="+" />
+                        
                     Your Lists
                 </div>
                 {listCard}

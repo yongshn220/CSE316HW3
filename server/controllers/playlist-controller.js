@@ -41,8 +41,7 @@ createSong = async (req, res) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
-        _playlist.songs.push({title: "Untitle", artist: "Unknown", youTubeId:""});
-        console.log(_playlist);
+        _playlist.songs.push({title: "Untitle", artist: "Unknown", youTubeId:"dQw4w9WgXcQ"});
 
         _playlist.save().then(() => {
             return res.status(201).json({
@@ -61,12 +60,10 @@ createSong = async (req, res) => {
 }
 
 createSongInIndex = async (req, res) => {
-    console.log("creatSonginindex");
     await Playlist.findOne({ _id: req.params.id }, (err, _playlist) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
-        console.log(req.params);
         _playlist.songs.splice(req.params.index, 0, JSON.parse(req.params.song));
 
         _playlist.save().then(() => {
@@ -91,7 +88,6 @@ moveSong = async (req, res) => {
             return res.status(400).json({ success: false, error: err})
         }
         moveSongInPlaylist(_playlist, parseInt(req.params.start), parseInt(req.params.end));
-        console.log(_playlist);
         _playlist.save().then(() => {
             return res.status(201).json({
                 success: true,
@@ -145,10 +141,7 @@ editSong = async (req, res) => {
         if (err) {
             return res.status(400).json({ success: false, error: err})
         }
-        console.log(_playlist.songs);
         _playlist.songs.map((s) => {
-            console.log(s._id);
-            console.log(song._id);
             if (s._id == song._id)
             {
                 s.title = song.title;
@@ -250,6 +243,29 @@ getPlaylistPairs = async (req, res) => {
         }
     }).catch(err => console.log(err))
 }
+updatePlaylistById = async (req, res) => {
+    await Playlist.findOne({_id: req.params.id}, (err, playlist) => {
+        if (err) {
+            return res.status(400).json({success: false, error: err})
+        }
+
+        playlist.name = req.body.name;
+
+        playlist.save().then(() => {
+            return res.status(201).json({
+                success: true,
+                playlist: req.body,
+                message: "",
+            })
+        })
+        .catch(error => {
+            return res.status(400).json({
+                error,
+                message: '',
+            })
+        })
+    })
+}
 
 module.exports = {
     createPlaylist,
@@ -261,5 +277,6 @@ module.exports = {
     deleteSongById,
     getPlaylists,
     getPlaylistPairs,
-    getPlaylistById
+    getPlaylistById,
+    updatePlaylistById
 }

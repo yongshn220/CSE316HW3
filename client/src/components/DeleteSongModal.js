@@ -16,6 +16,7 @@ function DeleteSongModal() {
         store.hideDeleteSongModal();
     }
 
+
     return (
         <div className="modal" id="delete-song-modal" defaultValue="" data-animation="slideInOutLeft">
             <div className="modal-dialog" id='verify-delete-song-root'>

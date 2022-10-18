@@ -72,7 +72,7 @@ body {
 
 .playlister-button, .playlister-button-disabled {
   font-size:36pt;
-  border-width: 0px;
+  border-width: 1px;
   float:left;
   color: black;
   cursor: pointer;
@@ -87,6 +87,7 @@ body {
 .playlister-button-disabled {
   opacity: 0.25; 
   cursor: not-allowed;
+  color: gray;
 }
 
 #playlister-statusbar {
@@ -103,6 +104,8 @@ body {
 }
 
 #add-list-button {
+  position: absolute;
+  left: -50px;
   float:left;
 }
 

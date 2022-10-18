@@ -12,7 +12,7 @@ function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [ editActive, setEditActive ] = useState(false);
     const [ text, setText ] = useState("");
-    store.history = useHistory();
+    // store.history = useHistory();
 
     const { idNamePair, selected } = props;
 
@@ -35,7 +35,7 @@ function ListCard(props) {
     function toggleEdit() {
         let newActive = !editActive;
         if (newActive) {
-            store.setIsListNameEditActive();
+            store.setlistNameActive();
         }
         setEditActive(newActive);
     }
@@ -52,7 +52,6 @@ function ListCard(props) {
     }
     function handleDeleteList(event) {
         event.stopPropagation();
-        console.log(event.target.id);
         store.showDeleteListModal(event.target.id.substring("delete-list-".length));
     }
 
